@@ -1,5 +1,14 @@
 <?php
 
+function isMemberOfList($user, $list) {
+    // This only works in lists that are AFS groups
+    $output = null;
+    $retval = null;
+    exec("pts membership 'system:'" . escapeshellarg($list) . " -noauth | sed -n 's/^  //p' | grep -qFx -e " . escapeshellarg($user), $output, $retval);
+    return $retval == 0;
+}
+
+
 function hashify($val) {
     return hash('sha256', PEPPER.":$val");
 }
@@ -78,10 +87,10 @@ function hasDiscordAccount($connection, $email) {
     return getPropertyByEmail($connection, $email, 'discord');
 }
 
-function updateRecord($connection, $email, $name, $discord) {
+function updateRecord($connection, $email, $discord) {
     $now = time();
-    $stmt = mysqli_prepare($connection, "UPDATE users2027 SET discord=?, name=?, timestamp=? WHERE email=?");
-    $stmt->bind_param("ssis", $discord, $name, $now, $email);
+    $stmt = mysqli_prepare($connection, "UPDATE users2027 SET discord=?, timestamp=? WHERE email=?");
+    $stmt->bind_param("ssis", $discord, $now, $email);
     if (!$stmt->execute()) {
         die("query failed! please report to 2027discordadmin@mit.edu or DM TO CONTACT STAFF");
     }
