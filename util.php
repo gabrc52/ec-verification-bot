@@ -8,6 +8,9 @@ function isMemberOfList($user, $list) {
     return $retval == 0;
 }
 
+function giveRole($server, $user, $role) {
+    $discord->RunAPI("PUT", "guilds/$server/members/$user/roles/$role", array(), array(), 204);
+}
 
 function hashify($val) {
     return hash('sha256', PEPPER.":$val");

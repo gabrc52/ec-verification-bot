@@ -12,7 +12,7 @@ require "constants.php";
 $baseurl = 'https://ec.mit.edu/';
 $server = '1141927141248880640';
 $role = '1141929891948925038';
-$success_message = 'You have been successfully verified and you can now use the server!';
+$role_resident = '1141929476154990732';
 
 /// Move GET parameters to a cookie.
 /// A better alternative would be to use `state` but I'm lazy and copying from Swolen't Tim as is
@@ -114,10 +114,14 @@ if (hasDiscordAccount($connection, $email) != $id) {
     die('You already have a Discord account associated with this email address. Please contact Discord staff at ec-discord@mit.edu.');
 }
 updateRecord($connection, $email, $_REQUEST['name'], $id);
-$discord->RunAPI("PUT", "guilds/$server/members/$id/roles/$role", array(), array(), 204);
-/// NOTE: this requires a change in the SDK. see https://github.com/cubiclesoft/php-discord-sdk/issues/4
-$discord->RunAPI("PATCH", "guilds/$server/members/$id", array("nick"=>$name), array(), 204);
-echo "<p>$success_message</p>";
+giveRole($server, $id, $role);
+echo "<p>You have been successfully verified and you can now use the server!</p>";
+
+if (isMemberOfList($kerb, 'ec-residents')) {
+    giveRole($server, $id, $role);
+    echo "<p>You have also been granted the resident role!</p>";
+}
+
 ?>
 </div>
 </body>
