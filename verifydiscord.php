@@ -110,8 +110,7 @@ $kerb = substr($email, 0, -8);
 authenticate(intval($_REQUEST['id']), $_REQUEST['auth'], 'Discord');
 
 $id = $_REQUEST['id'];
-// TODO: don't die if the discord account is the same
-if (hasDiscordAccount($connection, $email)) {
+if (hasDiscordAccount($connection, $email) != $id) {
     die('You already have a Discord account associated with this email address. Please contact Discord staff at ec-discord@mit.edu.');
 }
 updateRecord($connection, $email, $_REQUEST['name'], $id);
