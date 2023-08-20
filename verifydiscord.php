@@ -58,13 +58,13 @@ if (isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
     $tokenstuff = post('https://oidc.mit.edu/token', array(
         'grant_type' => 'authorization_code',
         'code' => $_GET['code'],
-        'redirect_uri' => 'https://discord2025.mit.edu/'.INSTANCE.'.php',
+        'redirect_uri' => '$baseurl'.INSTANCE.'.php',
         'client_id' => OAUTH_ID,
         'client_secret' => OAUTH_SECRET
     ));
     if (!$tokenstuff) {
         /// If unable to get a token, try again
-        header("Location: https://discord2025.mit.edu/".INSTANCE.".php");
+        header("Location: $baseurl".INSTANCE.".php");
         die();
     }
     $tokenstuff = json_decode($tokenstuff, true);
@@ -78,7 +78,7 @@ if (isset($_SERVER['SSL_CLIENT_S_DN_Email'])) {
 
 } else {
     /// If cert doesn't work, fallback to OAuth
-    header("Location: https://discord2025.mit.edu/redirect.php?instance=".INSTANCE);
+    header("Location: $baseurlredirect.php?instance=".INSTANCE);
     die();
 }
 
